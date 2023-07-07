@@ -5,7 +5,6 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
-  ScrollView,
   Platform,
 } from "react-native";
 
@@ -53,4 +52,3 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 25,
   },
 });
-

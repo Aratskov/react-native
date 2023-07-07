@@ -10,7 +10,7 @@ export const LoginScreen = () => {
   const [password, setPassword] = useState("");
 
   const onSignInPressed = () => {
-    console.warn({email,password});
+    console.warn({ email, password });
   };
 
   const onLoginInPressed = () => {
@@ -21,17 +21,18 @@ export const LoginScreen = () => {
     <View>
       <MainTitle title="Увійти" />
       <View style={styles.wrap}>
-      <Input
-        value={email}
-        setValue={setEmail}
-        placeholder="Адреса електронної пошти"
-      />
-      <Input
-        value={password}
-        setValue={setPassword}
-        placeholder="Пароль"
-        last={true}
-      />
+        <Input
+          value={email}
+          setValue={setEmail}
+          placeholder="Адреса електронної пошти"
+        />
+        <Input
+          value={password}
+          setValue={setPassword}
+          placeholder="Пароль"
+          last={true}
+          secureTextEntry={true}
+        />
       </View>
 
       <MainButton title="Увійти" onPress={onSignInPressed} />
@@ -44,9 +45,8 @@ export const LoginScreen = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   wrap: {
-    marginBottom:40
-  }
-})
+    marginBottom: 40,
+  },
+});

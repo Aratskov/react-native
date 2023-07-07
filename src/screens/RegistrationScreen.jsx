@@ -3,9 +3,8 @@ import {
   View,
   ActivityIndicator,
   Image,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
+  SafeAreaView,
+  Text,
 } from "react-native";
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -20,7 +19,8 @@ export const RegistrationScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState("");
-
+  const [showPassword, SetShowPassword] = useState(true);
+  
   const onSignInPressed = () => {
     console.warn({ login, email, password });
   };
@@ -48,10 +48,10 @@ export const RegistrationScreen = () => {
     }
   };
 
-  console.log(image);
+  console.log(showPassword);
 
   return (
-    <View style={styles.innerContainer}>
+    <SafeAreaView style={styles.innerContainer}>
       <View style={styles.imageContainer}>
         {image ? (
           <>
@@ -83,12 +83,17 @@ export const RegistrationScreen = () => {
           setValue={setEmail}
           placeholder="Адреса електронної пошти"
         />
-        <Input
-          value={password}
-          setValue={setPassword}
-          placeholder="Пароль"
-          last={true}
-        />
+        <View>
+          <Input
+            value={password}
+            setValue={setPassword}
+            placeholder="Пароль"
+            last={true}
+            secureTextEntry={showPassword}
+            
+          />
+          <Text onPress={()=>SetShowPassword(!showPassword)} style={styles.securityText}>{showPassword?"Показать":"Cкрыть"}</Text>
+        </View>
       </View>
 
       <MainButton title="Зареєстуватися" onPress={onSignInPressed} />
@@ -97,7 +102,7 @@ export const RegistrationScreen = () => {
         type="SECOND"
         onPress={onLoginInPressed}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -121,4 +126,10 @@ const styles = StyleSheet.create({
   wrap: {
     marginBottom: 40,
   },
+  securityText: {
+    position: 'absolute',
+    right: 16,
+    top: 16,
+    color: '#1B4371'
+  }
 });
