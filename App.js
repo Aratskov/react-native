@@ -17,7 +17,7 @@ export default function App() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        // keyboardVerticalOffset={-150}
+        keyboardVerticalOffset={-150}
         style={styles.container}
       >
         <ImageBackground
