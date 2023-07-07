@@ -1,19 +1,17 @@
 import { StyleSheet, View, Text } from "react-native";
 
-export const MainTitle = ({ title,padding}) => {
+export const MainTitle = ({ title, padding }) => {
   return (
     <View>
-      <Text style={[styles.title,padding && {paddingTop:92}]}>{title}</Text>
+      <Text style={[styles.title, padding && { paddingTop: 92 }]}>{title}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   title: {
-    paddingVertical:32,
-    // paddingTop: 92,
-    // paddingBottom: 32,
-
+    paddingVertical: 32,
+  
     color: "#212121",
 
     fontSize: 30,

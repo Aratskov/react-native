@@ -7,7 +7,9 @@ export const ButtonForImage = ({ onPress, symbol, type = "PRIMARY" }) => {
       onPress={onPress}
     >
       <View style={styles.wrapText}>
-        <Text style={[styles.buttonText,styles[`buttonText_${type}`]]}>{symbol}</Text>
+        <Text style={[styles.buttonText, styles[`buttonText_${type}`]]}>
+          {symbol}
+        </Text>
       </View>
     </TouchableHighlight>
   );
@@ -16,8 +18,8 @@ export const ButtonForImage = ({ onPress, symbol, type = "PRIMARY" }) => {
 const styles = StyleSheet.create({
   button: {
     // position: "absolute",
-    bottom: 55,
-    right: -55,
+    bottom: -35,
+    right: -60,
     width: 25,
     height: 25,
     borderWidth: 1,

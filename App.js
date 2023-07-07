@@ -26,8 +26,8 @@ export default function App() {
           style={styles.image}
         >
           <View style={styles.form}>
-            <RegistrationScreen />
-            {/* <LoginScreen /> */}
+            {/* <RegistrationScreen /> */}
+            <LoginScreen />
           </View>
         </ImageBackground>
       </KeyboardAvoidingView>

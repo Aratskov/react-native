@@ -20,7 +20,7 @@ export const RegistrationScreen = () => {
   const [password, setPassword] = useState("");
   const [image, setImage] = useState("");
   const [showPassword, SetShowPassword] = useState(true);
-  
+
   const onSignInPressed = () => {
     console.warn({ login, email, password });
   };
@@ -90,9 +90,13 @@ export const RegistrationScreen = () => {
             placeholder="Пароль"
             last={true}
             secureTextEntry={showPassword}
-            
           />
-          <Text onPress={()=>SetShowPassword(!showPassword)} style={styles.securityText}>{showPassword?"Показать":"Cкрыть"}</Text>
+          <Text
+            onPress={() => SetShowPassword(!showPassword)}
+            style={styles.securityText}
+          >
+            {showPassword ? "Показати" : "Cховати"}
+          </Text>
         </View>
       </View>
 
@@ -127,9 +131,9 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   securityText: {
-    position: 'absolute',
+    position: "absolute",
     right: 16,
     top: 16,
-    color: '#1B4371'
-  }
+    color: "#1B4371",
+  },
 });
