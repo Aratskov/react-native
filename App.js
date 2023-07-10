@@ -1,54 +1,32 @@
-import {
-  StyleSheet,
-  ImageBackground,
-  View,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Platform,
-} from "react-native";
+import "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { useFonts,Roboto_500Medium,Roboto_400Regular} from "@expo-google-fonts/roboto";
 
-import { RegistrationScreen } from "./src/screens/RegistrationScreen";
-import { LoginScreen } from "./src/screens/LoginScreen/";
-import Background from "./assets/bg.png";
+
+import { AuthForm } from "./src/component/AuthFormUni";
+import { PostsScreen } from "./src/screens/PostsScreen/";
+
+const MainStack = createStackNavigator(); // вказує на групу навігаторів
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Roboto_400Regular,Roboto_500Medium
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={-150}
-        style={styles.container}
-      >
-        <ImageBackground
-          source={Background}
-          resizeMode="stretch"
-          style={styles.image}
-        >
-          <View style={styles.form}>
-            {/* <RegistrationScreen /> */}
-            <LoginScreen />
-          </View>
-        </ImageBackground>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+    <NavigationContainer>
+      <MainStack.Navigator>
+        {/* Аналог Routes */}
+        <MainStack.Screen name="Registration" component={AuthForm} />
+        {/* Аналог Route */}
+        <MainStack.Screen name="Login" component={AuthForm}/>
+        <MainStack.Screen name="Home" component={PostsScreen} />
+      </MainStack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  image: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-  form: {
-    paddingHorizontal: 16,
-    backgroundColor: "#FFF",
-    // paddingTop: 160,
-    paddingBottom: 45,
-    borderTopStartRadius: 25,
-    borderTopEndRadius: 25,
-  },
-});

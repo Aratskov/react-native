@@ -22,6 +22,7 @@ button_PRIMARY: {
     
   buttonText: {
     margin: 0,
+    fontFamily:"Roboto_400Regular",
     color: "#FFF",
     textAlign: "center",
     },

@@ -14,19 +14,18 @@ import { Input } from "../component/Input";
 import { MainTitle } from "../component/Title";
 import { ButtonForImage } from "../component/ButtonForImage";
 
+import { useNavigation } from "@react-navigation/native";
+
 export const RegistrationScreen = () => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState("");
   const [showPassword, SetShowPassword] = useState(true);
+  const navigate = useNavigation();
 
   const onSignInPressed = () => {
     console.warn({ login, email, password });
-  };
-
-  const onLoginInPressed = () => {
-    console.warn("Вже є акаунт? Увійти");
   };
 
   const selectDoc = async () => {
@@ -47,8 +46,6 @@ export const RegistrationScreen = () => {
       alert("You did not select any image.");
     }
   };
-
-  console.log(showPassword);
 
   return (
     <SafeAreaView style={styles.innerContainer}>
@@ -100,11 +97,16 @@ export const RegistrationScreen = () => {
         </View>
       </View>
 
-      <MainButton title="Зареєстуватися" onPress={onSignInPressed} />
+      {/* <MainButton title="Зареєстуватися" onPress={onSignInPressed} /> */}
+      <MainButton
+        title="Зареєстуватися"
+        onPress={() => navigate.navigate("Home")}
+      />
+
       <MainButton
         title="Вже є акаунт? Увійти"
         type="SECOND"
-        onPress={onLoginInPressed}
+        onPress={() => navigate.navigate("Login")}
       />
     </SafeAreaView>
   );
@@ -134,6 +136,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 16,
     top: 16,
+    fontFamily: "Roboto_400Regular",
     color: "#1B4371",
   },
 });

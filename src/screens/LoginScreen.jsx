@@ -5,17 +5,17 @@ import { MainButton } from "../component/Button";
 import { Input } from "../component/Input";
 import { MainTitle } from "../component/Title";
 
+import { useNavigation } from "@react-navigation/native";
+
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, SetShowPassword] = useState(true);
 
+  const navigation = useNavigation();
+
   const onSignInPressed = () => {
     console.warn({ email, password });
-  };
-
-  const onLoginInPressed = () => {
-    console.warn("Немає акаунту? Зареєструватися");
   };
 
   return (
@@ -44,11 +44,13 @@ export const LoginScreen = () => {
         </View>
       </View>
 
-      <MainButton title="Увійти" onPress={onSignInPressed} />
+      {/* <MainButton title="Увійти" onPress={onSignInPressed} /> */}
+      <MainButton title="Увійти" onPress={() => navigation.navigate("Home")} />
+
       <MainButton
         title="Немає акаунту? Зареєструватися"
         type="SECOND"
-        onPress={onLoginInPressed}
+        onPress={() => navigation.navigate("Registration")}
       />
     </View>
   );
@@ -62,6 +64,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 16,
     top: 16,
+    fontFamily: "Roboto_400Regular",
+
     color: "#1B4371",
   },
 });
