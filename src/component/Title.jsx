@@ -11,10 +11,10 @@ export const MainTitle = ({ title, padding }) => {
 const styles = StyleSheet.create({
   title: {
     paddingVertical: 32,
-  
+
     color: "#212121",
 
-    fontFamily:"Roboto_500Medium",
+    fontFamily: "Roboto_500Medium",
     fontSize: 30,
     fontWeight: 500,
     textAlign: "center",

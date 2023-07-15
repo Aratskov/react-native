@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#E8E8E8",
     borderRadius: 16,
-    padding: 20,
+
+    zIndex: 999,
   },
   wrap: {
     marginBottom: 40,

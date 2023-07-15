@@ -22,10 +22,10 @@ export default function App() {
     <NavigationContainer>
       <MainStack.Navigator>
         {/* Аналог Routes */}
-        <MainStack.Screen name="Registration" component={AuthForm} />
+        <MainStack.Screen name="Registration" component={AuthForm} options={{headerShown:false}} />
         {/* Аналог Route */}
-        <MainStack.Screen name="Login" component={AuthForm}/>
-        <MainStack.Screen name="Home" component={PostsScreen} />
+        <MainStack.Screen name="Login" component={AuthForm} options={{headerShown:false}}/>
+        <MainStack.Screen name="Home" component={PostsScreen}  options={{headerShown:false}}/>
       </MainStack.Navigator>
     </NavigationContainer>
   );

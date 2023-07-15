@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     borderWidth: 1,
-    borderRadius: "25%",
+    borderRadius: "50%",
   },
   button_SECOND: {
     borderColor: "#BDBDBD",
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
   },
 
   buttonText: {
