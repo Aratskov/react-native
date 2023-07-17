@@ -15,8 +15,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier":"com.example.mapsdemo",
+      "config": {
+      "googleMapsApiKey": "AIzaSyCUPnz-YKRDnwd_lX5bCk3P1i3jwPCLCzg"
+     }
     },
+    "ios.config.googleMapsApiKey":"AIzaSyCUPnz-YKRDnwd_lX5bCk3P1i3jwPCLCzg",
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

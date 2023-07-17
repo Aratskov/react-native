@@ -7,10 +7,11 @@ export const Input = ({
   placeholder,
   last,
   secureTextEntry,
+  type="PRIMARY"
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
-  const inputStyle = [styles.input, isFocused && styles.inputFocus];
+  const inputStyle = [styles.input,styles[`input_${type}`],isFocused && styles.inputFocus];
   if (last) {
     inputStyle.push(styles.lastInput);
   }
@@ -36,12 +37,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
 
     fontSize: 16,
-    backgroundColor: "#F6F6F6",
     color: "#212121",
-
-    borderWidth: 1,
-    borderRadius: 10,
+    
     borderColor: "#E8E8E8",
+  },
+  input_PRIMARY: {
+    backgroundColor: "#F6F6F6",
+    borderWidth: 1, 
+    borderRadius: 10,
   },
   inputFocus: {
     backgroundColor: "#FFF",
@@ -50,4 +53,8 @@ const styles = StyleSheet.create({
   lastInput: {
     marginBottom: 0,
   },
+  input_AddPost: {
+    backgroundColor: "#FFF",
+  borderBottomWidth:1,
+  }
 });

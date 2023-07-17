@@ -8,7 +8,7 @@ import {
   Platform,
 } from "react-native";
 
-import { RegistrationScreen } from "../screens/RegistrationScreen";
+import { RegistrationScreen } from "../screens/RegistrationScreen/";
 import { LoginScreen } from "../screens/LoginScreen/";
 import Background from "../../assets/bg.png";
 
@@ -21,7 +21,7 @@ export const AuthForm = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={-100}
+        keyboardVerticalOffset={-150}
         style={styles.container}
       >
         <ImageBackground
