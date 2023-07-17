@@ -1,43 +1,41 @@
+import { useRoute } from "@react-navigation/native";
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE} from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import FastImageView from "react-native-fast-image";
+import { CustomCallout } from "../component/CustomCallout";
 
 export const MapScreen = () => {
+  const {
+    params: {
+      markerOnMaps: { latitude, longitude, title, photo },
+    },
+  } = useRoute();
+
   return (
-    <View style={styles.container}>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.mapStyle}
-        initialRegion={{
-          latitude: 47.83737,
-          longitude: 35.14506,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        // mapType="standard"
-        // minZoomLevel={15}
-        // onMapReady={() => console.log("Map is ready")}
-        // onRegionChange={() => console.log("Region change")}
-      >
-        <Marker
-          title="I am here"
-          coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-          description='Hello'
-        />
-      </MapView>
-    </View>
+    <MapView
+      provider={PROVIDER_GOOGLE}
+      style={styles.map}
+      initialRegion={{
+        latitude,
+        longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }}
+      mapType="standard"
+      minZoomLevel={13}
+      // onMapReady={() => console.log("Map is ready")}
+      // onRegionChange={() => console.log("Region change")}
+    >
+      <Marker coordinate={{ latitude, longitude }}>
+        <CustomCallout photo={photo} title={title} />
+      </Marker>
+    </MapView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  map: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  mapStyle: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
   },
 });
