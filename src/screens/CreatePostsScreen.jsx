@@ -18,6 +18,8 @@ import {
 import { MainButton } from "../component/Button";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import { Input } from "../component/Input";
 
 export const CreatePostsScreen = () => {
@@ -66,10 +68,16 @@ export const CreatePostsScreen = () => {
     );
   }
 
+  const isFormValid = () => {
+    return photo && title && location;
+  };
+
   const handleSubmitLocation = async () => {
     let {
       coords: { latitude, longitude },
     } = await Location.getCurrentPositionAsync({});
+
+    if (!isFormValid()) return alert("Please fill in all fields");
 
     const data = {
       photo,
@@ -190,7 +198,11 @@ export const CreatePostsScreen = () => {
                   last={true}
                 />
               </SafeAreaView>
-              <MainButton title="Опубліковати" onPress={handleSubmitLocation} />
+              <MainButton
+                title="Опубліковати"
+                onPress={handleSubmitLocation}
+                disabled={!isFormValid()}
+              />
             </ScrollView>
           )}
         </SafeAreaView>
@@ -202,6 +214,7 @@ export const CreatePostsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFF",
   },
   camera: {
     flex: 1,
@@ -209,7 +222,6 @@ const styles = StyleSheet.create({
   scrollContainer: {
     paddingHorizontal: 16,
     paddingTop: 32,
-    backgroundColor: "#FFF",
   },
   buttonContainer: {
     flex: 1,
@@ -244,7 +256,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   icon: {
-    // flex:1,
     justifyContent: "center",
     alignItems: "center",
 

@@ -7,15 +7,27 @@ import { MainTitle } from "../component/Title";
 
 import { useNavigation } from "@react-navigation/native";
 
+import { FIREBASE_AUTH } from "../../config";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, SetShowPassword] = useState(true);
 
+  const auth = FIREBASE_AUTH;
+
   const navigation = useNavigation();
 
-  const onSignInPressed = () => {
-    console.warn({ email, password });
+  const loginDB = async () => {
+    try {
+      const credentials = await signInWithEmailAndPassword(auth, email, password);
+      alert("Success")
+      return credentials.user;
+    } catch (error) {
+      alert(error);
+      throw error;
+    }
   };
 
   return (
@@ -45,7 +57,7 @@ export const LoginScreen = () => {
       </View>
 
       {/* <MainButton title="Увійти" onPress={onSignInPressed} /> */}
-      <MainButton title="Увійти" onPress={() => navigation.navigate("Home")} />
+      <MainButton title="Увійти" onPress={loginDB} />
 
       <MainButton
         title="Немає акаунту? Зареєструватися"

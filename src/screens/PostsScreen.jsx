@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { ContainerImage } from "../component/ContainerImage";
 
@@ -17,27 +24,30 @@ export const PostsScreen = () => {
   console.log(posts);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.content}>
-        {posts.map(({ photo, title, location, geoLocation }, index) => (
-          <View key={index} style={styles.wrap}>
-            <ContainerImage
-              photo={photo}
-              title={title}
-              location={location}
-              geoLocation={geoLocation}
-            />
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <View style={styles.content}>
+          {posts.map(({ photo, title, location, geoLocation }, index) => (
+            <View key={index} style={styles.wrap}>
+              <ContainerImage
+                photo={photo}
+                title={title}
+                location={location}
+                geoLocation={geoLocation}
+              />
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
     backgroundColor: "#FFF",
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
   },
   content: {
     flex: 1,

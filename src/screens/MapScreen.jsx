@@ -2,7 +2,6 @@ import { useRoute } from "@react-navigation/native";
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import FastImageView from "react-native-fast-image";
 import { CustomCallout } from "../component/CustomCallout";
 
 export const MapScreen = () => {

@@ -20,8 +20,9 @@ export const AuthForm = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        // behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={-150}
+        behavior="padding"
         style={styles.container}
       >
         <ImageBackground

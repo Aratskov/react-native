@@ -6,9 +6,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { ProfileScreen } from "./ProfileScreen";
 import { PostsScreen } from "./PostsScreen/";
 import { CreatePostsScreen } from "./CreatePostsScreen";
-import { MapScreen } from "./MapScreen";
 
-import { BackButton } from "../component/ButtonHeader";
+import { BackButton, LogOutButton } from "../component/ButtonHeader";
 
 const Tabs = createBottomTabNavigator();
 
@@ -29,7 +28,7 @@ export const Home = () => {
           tabBarIcon: ({ size }) => (
             <Ionicons name="grid-outline" color="#212121" size={size} />
           ),
-          headerRight: () => <BackButton icon="md-log-out-outline" />,
+          headerRight: () => <LogOutButton icon="md-log-out-outline" />,
         }}
       />
 
@@ -59,18 +58,6 @@ export const Home = () => {
           ),
         }}
       />
-      {/* <Tabs.Screen
-        name="Map"
-        component={MapScreen}
-        options={{
-          title: "Карта",
-          tabBarIcon: null,
-          tabBarStyle: {
-            display: "none",
-          },
-          headerLeft: () => <BackButton icon="arrow-back" />,
-        }}
-      /> */}
     </Tabs.Navigator>
   );
 };
