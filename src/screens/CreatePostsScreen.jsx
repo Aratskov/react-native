@@ -21,7 +21,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Input } from "../component/Input";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { FIREBASE_DB } from "../../config";
 import LoadingScreen from "./LoadingScreen";
 
@@ -96,6 +96,7 @@ export const CreatePostsScreen = () => {
         title,
         location,
         geoLocation: { latitude, longitude },
+        createAt:serverTimestamp(),
       });
 
       navigate.navigate("Posts");

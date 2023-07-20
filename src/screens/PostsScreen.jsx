@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { ContainerImage } from "../component/ContainerImage";
 import { FIREBASE_DB } from "../../config";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 
 import { ProfileMainScreen } from "../component/ProfileMainScreen";
 
@@ -22,8 +22,11 @@ export const PostsScreen = () => {
 
   useLayoutEffect(() => {
     if (uid) {
-      const unsubscribe = onSnapshot(
-        collection(FIREBASE_DB, `user/${uid}/posts`),
+      const postDB = collection(FIREBASE_DB, `user/${uid}/posts`)
+      const q=query(postDB,orderBy('createAt',"desc"))
+
+      const unsubscribe = onSnapshot(q
+        ,
         (post) => {
           const postsData = post.docs.map((doc) => {
             return { id: doc.id, ...doc.data() };
@@ -34,8 +37,6 @@ export const PostsScreen = () => {
       return unsubscribe;
     }
   }, [uid]);
-
-  console.log(posts)
 
   return (
     <SafeAreaView style={styles.container}>

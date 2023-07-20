@@ -40,8 +40,10 @@ export const CommentsScreen = () => {
       FIREBASE_DB,
       `user/${uid}/posts/${id}/comment`
     );
+      const q=query(msgCollectionRef,orderBy('createAt'))
 
-    const unsubscribe = onSnapshot(msgCollectionRef, (comment) => {
+
+    const unsubscribe = onSnapshot(q, (comment) => {
       const messages = comment.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
       });
