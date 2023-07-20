@@ -3,6 +3,8 @@ import {
   addDoc,
   collection,
   onSnapshot,
+  orderBy,
+  query,
   serverTimestamp,
 } from "firebase/firestore";
 import React, { useLayoutEffect, useState } from "react";
@@ -15,16 +17,17 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { FIREBASE_DB } from "../../config";
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/Auth/authSelect";
+import { AntDesign } from "@expo/vector-icons";
 
 export const CommentsScreen = () => {
   const {
@@ -33,15 +36,13 @@ export const CommentsScreen = () => {
   const [messages, setMessages] = useState([]);
   const [comment, setComment] = useState("");
   const { uid, avatar } = useSelector(selectUser);
-  const user = useSelector(selectUser);
 
   useLayoutEffect(() => {
     const msgCollectionRef = collection(
       FIREBASE_DB,
       `user/${uid}/posts/${id}/comment`
     );
-      const q=query(msgCollectionRef,orderBy('createAt'))
-
+    const q = query(msgCollectionRef, orderBy("createAt"));
 
     const unsubscribe = onSnapshot(q, (comment) => {
       const messages = comment.docs.map((doc) => {
@@ -55,7 +56,7 @@ export const CommentsScreen = () => {
 
   const sendComment = async () => {
     const msg = comment.trim();
-    if (msg === '') return alert("Min 1 symbol");
+    if (msg === "") return alert("Min 1 symbol");
 
     const msgCollectionRef = collection(
       FIREBASE_DB,
@@ -71,6 +72,32 @@ export const CommentsScreen = () => {
     setComment("");
   };
 
+  function formatDate(timestamp) {
+    const months = [
+      "січня",
+      "лютого",
+      "березня",
+      "квітня",
+      "травня",
+      "червня",
+      "липня",
+      "серпня",
+      "вересня",
+      "жовтня",
+      "листопада",
+      "грудня",
+    ];
+
+    const date = timestamp?.toDate();
+    const day = date?.getDate();
+    const month = months[date?.getMonth()];
+    const year = date?.getFullYear();
+    const hours = date?.getHours();
+    const minutes = String(date?.getMinutes()).padStart(2, "0");
+
+    return `${day} ${month}, ${year} | ${hours}:${minutes}`;
+  }
+
   const renderComment = ({ item }) => {
     const myComment = item.sender === uid;
     return (
@@ -78,7 +105,10 @@ export const CommentsScreen = () => {
         style={myComment ? styles.rowReverseDirection : styles.rowDirection}
       >
         <View style={styles.avatar}>
-          <Image source={{ uri: avatar }} style={styles.avatar} />
+          <Image
+            source={{ uri: myComment ? avatar : null }}
+            style={styles.avatar}
+          />
         </View>
         <View
           style={[
@@ -89,8 +119,13 @@ export const CommentsScreen = () => {
           ]}
         >
           <Text style={styles.messageText}>{item.comment}</Text>
-          <Text style={styles.messageDate}>
-            {item.createAt?.toDate().toLocaleDateString()}
+          <Text
+            style={[
+              styles.messageDate,
+              myComment ? styles.userMessageDate : styles.otherMessageDate,
+            ]}
+          >
+            {formatDate(item.createAt)}
           </Text>
         </View>
       </View>
@@ -124,11 +159,13 @@ export const CommentsScreen = () => {
             placeholder="Коментувати..."
             multiline
           />
-          <Button
+          <TouchableOpacity
             disabled={comment === ""}
-            title="Send"
+            style={styles.sendButton}
             onPress={sendComment}
-          />
+          >
+            <AntDesign name="arrowup" size={20} color="white" />
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
@@ -149,7 +186,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingVertical: 32,
-    // justifyContent: "center",
   },
   image: {
     flex: 1,
@@ -161,7 +197,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
-    flexDirection: "row",
+    position: "relative",
     minHeight: 50,
     paddingTop: 32,
     paddingBottom: 16,
@@ -186,7 +222,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 28,
     height: 28,
-    // backgroundColor: "red",
+    backgroundColor: "#FF6C00",
     borderRadius: 25,
   },
   messageContainer: {
@@ -195,8 +231,6 @@ const styles = StyleSheet.create({
     width: "80%",
     backgroundColor: "rgba(0, 0, 0, 0.03)",
 
-    borderColor: "rgba(0, 0, 0, 1)",
-    borderWidth: 1,
     borderBottomLeftRadius: 6,
     borderBottomRightRadius: 6,
   },
@@ -218,8 +252,27 @@ const styles = StyleSheet.create({
   messageDate: {
     marginTop: 8,
     color: "#BDBDBD",
-    textAlign: "right",
     fontSize: 10,
     fontFamily: "Roboto_400Regular",
+  },
+  userMessageDate: {
+    textAlign: "left",
+  },
+  otherMessageDate: {
+    textAlign: "right",
+  },
+  sendButton: {
+    position: "absolute",
+    right: 8,
+    bottom: 24,
+
+    justifyContent: "center",
+    alignItems: "center",
+
+    width: 34,
+    height: 34,
+
+    backgroundColor: "#FF6C00",
+    borderRadius: "50%",
   },
 });
