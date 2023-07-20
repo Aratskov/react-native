@@ -21,6 +21,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Input } from "../component/Input";
+import { addDoc, collection } from "firebase/firestore";
+import { FIREBASE_DB } from "../../config";
+import LoadingScreen from "./LoadingScreen";
+
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/Auth/authSelect";
 
 export const CreatePostsScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -29,10 +35,14 @@ export const CreatePostsScreen = () => {
   const [photo, setPhoto] = useState(null);
   const [visibleCamera, setCameraVisible] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
 
   const navigate = useNavigation();
+
+  const { uid } = useSelector(selectUser);
 
   // Дозвіл на місцезнаходження
   useEffect(() => {
@@ -73,24 +83,31 @@ export const CreatePostsScreen = () => {
   };
 
   const handleSubmitLocation = async () => {
-    let {
-      coords: { latitude, longitude },
-    } = await Location.getCurrentPositionAsync({});
+    setLoading(true);
+    try {
+      let {
+        coords: { latitude, longitude },
+      } = await Location.getCurrentPositionAsync({});
 
-    if (!isFormValid()) return alert("Please fill in all fields");
+      if (!isFormValid()) return alert("Please fill in all fields");
 
-    const data = {
-      photo,
-      title,
-      location,
-      geoLocation: { latitude, longitude },
-    };
+      await addDoc(collection(FIREBASE_DB, `user/${uid}/posts`), {
+        photo,
+        title,
+        location,
+        geoLocation: { latitude, longitude },
+      });
 
-    navigate.navigate("Posts", { postData: data });
+      navigate.navigate("Posts");
 
-    setPhoto(null);
-    setTitle("");
-    setLocation("");
+      setPhoto(null);
+      setTitle("");
+      setLocation("");
+    } catch (error) {
+      alert("false");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -100,112 +117,118 @@ export const CreatePostsScreen = () => {
         keyboardVerticalOffset={50}
         style={{ flex: 1 }}
       >
-        <SafeAreaView style={styles.container}>
-          {visibleCamera ? (
-            <Camera style={styles.camera} type={type} ref={setCameraRef}>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={toggleCameraType}
-                >
-                  <Ionicons name="md-camera-reverse-sharp" size={32} />
-                </TouchableOpacity>
+        {loading ? (
+          <LoadingScreen />
+        ) : (
+          <SafeAreaView style={styles.container}>
+            {visibleCamera ? (
+              <Camera style={styles.camera} type={type} ref={setCameraRef}>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={toggleCameraType}
+                  >
+                    <Ionicons name="md-camera-reverse-sharp" size={32} />
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={async () => {
-                    if (cameraRef) {
-                      const { uri } = await cameraRef.takePictureAsync();
-                      await MediaLibrary.createAssetAsync(uri);
-                      setCameraVisible(false);
-                      setPhoto(uri);
-                    }
-                  }}
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={async () => {
+                      if (cameraRef) {
+                        const { uri } = await cameraRef.takePictureAsync();
+                        await MediaLibrary.createAssetAsync(uri);
+                        setCameraVisible(false);
+                        setPhoto(uri);
+                      }
+                    }}
+                  >
+                    <Ionicons name="camera" size={32} />
+                  </TouchableOpacity>
+                </View>
+              </Camera>
+            ) : (
+              <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <View
+                  style={{ alignItems: "center", justifyContent: "center" }}
                 >
-                  <Ionicons name="camera" size={32} />
-                </TouchableOpacity>
-              </View>
-            </Camera>
-          ) : (
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-              <View style={{ alignItems: "center", justifyContent: "center" }}>
-                <View style={styles.wrapImage}>
-                  {photo ? (
-                    <>
-                      <Image
-                        source={{ uri: photo }}
-                        resizeMode="cover"
-                        style={{
-                          flex: 1,
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: 8,
-                          justifyContent: "center",
-                        }}
-                      />
+                  <View style={styles.wrapImage}>
+                    {photo ? (
+                      <>
+                        <Image
+                          source={{ uri: photo }}
+                          resizeMode="cover"
+                          style={{
+                            flex: 1,
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: 8,
+                            justifyContent: "center",
+                          }}
+                        />
+                        <TouchableOpacity
+                          style={[
+                            styles.icon,
+                            {
+                              position: "absolute",
+                              backgroundColor: "rgba(255, 255, 255, 0.30)",
+                            },
+                          ]}
+                          onPress={() => setCameraVisible(true)}
+                        >
+                          <Ionicons
+                            name="md-camera-sharp"
+                            color="#FFF"
+                            size={30}
+                          />
+                        </TouchableOpacity>
+                      </>
+                    ) : (
                       <TouchableOpacity
-                        style={[
-                          styles.icon,
-                          {
-                            position: "absolute",
-                            backgroundColor: "rgba(255, 255, 255, 0.30)",
-                          },
-                        ]}
+                        style={styles.icon}
                         onPress={() => setCameraVisible(true)}
                       >
                         <Ionicons
                           name="md-camera-sharp"
-                          color="#FFF"
+                          color="#BDBDBD"
                           size={30}
                         />
                       </TouchableOpacity>
-                    </>
-                  ) : (
-                    <TouchableOpacity
-                      style={styles.icon}
-                      onPress={() => setCameraVisible(true)}
-                    >
-                      <Ionicons
-                        name="md-camera-sharp"
-                        color="#BDBDBD"
-                        size={30}
-                      />
-                    </TouchableOpacity>
-                  )}
+                    )}
+                  </View>
                 </View>
-              </View>
-              <Text
-                style={{
-                  color: "#BDBDBD",
-                  fontFamily: "Roboto_400Regular",
-                  marginTop: 8,
-                }}
-              >
-                {!photo ? "Завантажте фото" : "Редагувати фото"}
-              </Text>
-              <SafeAreaView style={{ marginVertical: 32 }}>
-                <Input
-                  placeholder="Назва..."
-                  type="AddPost"
-                  value={title}
-                  setValue={setTitle}
+                <Text
+                  style={{
+                    color: "#BDBDBD",
+                    fontFamily: "Roboto_400Regular",
+                    marginTop: 8,
+                  }}
+                >
+                  {!photo ? "Завантажте фото" : "Редагувати фото"}
+                </Text>
+                <SafeAreaView style={{ marginVertical: 32 }}>
+                  <Input
+                    placeholder="Назва..."
+                    type="AddPost"
+                    value={title}
+                    setValue={setTitle}
+                  />
+                  <Input
+                    placeholder="Місцевість..."
+                    type="AddPost"
+                    value={location}
+                    setValue={setLocation}
+                    last={true}
+                  />
+                </SafeAreaView>
+                <MainButton
+                  title="Опубліковати"
+                  onPress={handleSubmitLocation}
+                  disabled={!isFormValid()}
                 />
-                <Input
-                  placeholder="Місцевість..."
-                  type="AddPost"
-                  value={location}
-                  setValue={setLocation}
-                  last={true}
-                />
-              </SafeAreaView>
-              <MainButton
-                title="Опубліковати"
-                onPress={handleSubmitLocation}
-                disabled={!isFormValid()}
-              />
-            </ScrollView>
-          )}
-        </SafeAreaView>
+              </ScrollView>
+            )}
+          </SafeAreaView>
+        )}
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

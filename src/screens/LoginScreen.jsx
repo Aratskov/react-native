@@ -6,28 +6,19 @@ import { Input } from "../component/Input";
 import { MainTitle } from "../component/Title";
 
 import { useNavigation } from "@react-navigation/native";
-
-import { FIREBASE_AUTH } from "../../config";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../redux/Auth/authOperation";
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, SetShowPassword] = useState(true);
 
-  const auth = FIREBASE_AUTH;
-
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const loginDB = async () => {
-    try {
-      const credentials = await signInWithEmailAndPassword(auth, email, password);
-      alert("Success")
-      return credentials.user;
-    } catch (error) {
-      alert(error);
-      throw error;
-    }
+  const handleSubmitLogin = () => {
+    dispatch(loginUser({ email, password }));
   };
 
   return (
@@ -56,8 +47,7 @@ export const LoginScreen = () => {
         </View>
       </View>
 
-      {/* <MainButton title="Увійти" onPress={onSignInPressed} /> */}
-      <MainButton title="Увійти" onPress={loginDB} />
+      <MainButton title="Увійти" onPress={handleSubmitLogin} />
 
       <MainButton
         title="Немає акаунту? Зареєструватися"

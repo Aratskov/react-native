@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,35 +7,52 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
 import { ContainerImage } from "../component/ContainerImage";
+import { FIREBASE_DB } from "../../config";
+import { collection, onSnapshot } from "firebase/firestore";
+
+import { ProfileMainScreen } from "../component/ProfileMainScreen";
+
+import { useSelector } from "react-redux";
+import { selectUID } from "../redux/Auth/authSelect";
 
 export const PostsScreen = () => {
-  const { params } = useRoute();
-  const postData = params?.postData;
+  const uid = useSelector(selectUID);
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    if (postData) {
-      setPosts((prevPosts) => [postData, ...prevPosts]);
+  useLayoutEffect(() => {
+    if (uid) {
+      const unsubscribe = onSnapshot(
+        collection(FIREBASE_DB, `user/${uid}/posts`),
+        (post) => {
+          const postsData = post.docs.map((doc) => {
+            return { id: doc.id, ...doc.data() };
+          });
+          setPosts(postsData);
+        }
+      );
+      return unsubscribe;
     }
-  }, [postData]);
+  }, [uid]);
 
-  console.log(posts);
+  console.log(posts)
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
+        <View style={{ paddingHorizontal: 16 }}>
+          <ProfileMainScreen />
+        </View>
         <View style={styles.content}>
-          {posts.map(({ photo, title, location, geoLocation }, index) => (
-            <View key={index} style={styles.wrap}>
-              <ContainerImage
-                photo={photo}
-                title={title}
-                location={location}
-                geoLocation={geoLocation}
-              />
-            </View>
+          {posts.map(({ photo, title, location, geoLocation, id }) => (
+            <ContainerImage
+              key={id}
+              photo={photo}
+              title={title}
+              location={location}
+              geoLocation={geoLocation}
+              id={id}
+            />
           ))}
         </View>
       </ScrollView>
@@ -45,16 +62,12 @@ export const PostsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
     backgroundColor: "#FFF",
-    // paddingHorizontal: 16,
   },
   content: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  wrap: {
-    marginTop: 32,
   },
 });

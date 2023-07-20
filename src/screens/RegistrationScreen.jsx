@@ -15,39 +15,19 @@ import { MainTitle } from "../component/Title";
 import { ButtonForImage } from "../component/ButtonForImage";
 
 import { useNavigation } from "@react-navigation/native";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { FIREBASE_AUTH } from "../../config";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../redux/Auth/authOperation";
 
 export const RegistrationScreen = () => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [image, setImage] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [showPassword, SetShowPassword] = useState(true);
+
+  const dispatch = useDispatch();
+
   const navigate = useNavigation();
-
-  const auth = FIREBASE_AUTH;
-
-  const registerDB = async () => {
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-
-      alert("success");
-      const user = res.user;
-
-      // Обновляем профиль пользователя с заданным именем
-      if (user) {
-      await updateProfile(user, {
-        displayName: login,
-        photoURL: image,
-      });
-      }
-
-    } catch (error) {
-      alert(error);
-      throw error;
-    }
-  };
 
   const selectDoc = async () => {
     const permissionResult =
@@ -62,19 +42,30 @@ export const RegistrationScreen = () => {
       quality: 1,
     });
     if (!pickerResult.canceled) {
-      setImage(pickerResult.assets[0].uri);
+      setAvatar(pickerResult.assets[0].uri);
     } else {
       alert("You did not select any image.");
     }
   };
 
+  const handleSubmit = () => {
+    const userData = {
+      avatar,
+      password,
+      login,
+      email,
+    };
+
+    dispatch(registerUser(userData));
+  };
+
   return (
     <SafeAreaView style={styles.innerContainer}>
       <View style={styles.imageContainer}>
-        {image ? (
+        {avatar ? (
           <>
             <Image
-              source={{ uri: image }}
+              source={{ uri: avatar }}
               style={{
                 width: 120,
                 height: 120,
@@ -83,7 +74,7 @@ export const RegistrationScreen = () => {
               }}
             />
             <ButtonForImage
-              onPress={() => setImage(false)}
+              onPress={() => setAvatar(false)}
               symbol="x"
               type="SECOND"
             />
@@ -118,8 +109,7 @@ export const RegistrationScreen = () => {
         </View>
       </View>
 
-      {/* <MainButton title="Зареєстуватися" onPress={onSignInPressed} /> */}
-      <MainButton title="Зареєстуватися" onPress={registerDB} />
+      <MainButton title="Зареєстуватися" onPress={handleSubmit} />
 
       <MainButton
         title="Вже є акаунт? Увійти"

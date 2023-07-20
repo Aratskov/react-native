@@ -6,6 +6,7 @@ import {
   useFonts,
   Roboto_500Medium,
   Roboto_400Regular,
+  Roboto_700Bold
 } from "@expo-google-fonts/roboto";
 
 import { User, onAuthStateChanged } from "firebase/auth";
@@ -16,6 +17,9 @@ import { Home } from "./src/screens/Home";
 import { MapScreen } from "./src/screens/MapScreen";
 import { CommentsScreen } from "./src/screens/CommentsScreen";
 import LoadingScreen from "./src/screens/LoadingScreen";
+import { Provider } from "react-redux";
+import { store, persistor } from "./src/redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 const MainStack = createStackNavigator(); // вказує на групу навігаторів
 
@@ -60,6 +64,7 @@ export default function App() {
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_500Medium,
+    Roboto_700Bold
   });
 
   if (!fontsLoaded || loading) {
@@ -67,31 +72,35 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <MainStack.Navigator>
-        {/* Аналог Routes */}
-        {user ? (
-          <MainStack.Screen
-            name="HomeLayout"
-            component={HomeLayout}
-            options={{ headerShown: false }}
-          />
-        ) : (
-          <>
-            <MainStack.Screen
-              name="Registration"
-              component={AuthForm}
-              options={{ headerShown: false }}
-            />
-            {/* Аналог Route */}
-            <MainStack.Screen
-              name="Login"
-              component={AuthForm}
-              options={{ headerShown: false }}
-            />
-          </>
-        )}
-      </MainStack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationContainer>
+          <MainStack.Navigator initialRouteName="Login">
+            {/* Аналог Routes */}
+            {user ? (
+              <MainStack.Screen
+                name="HomeLayout"
+                component={HomeLayout}
+                options={{ headerShown: false }}
+              />
+            ) : (
+              <>
+                <MainStack.Screen
+                  name="Registration"
+                  component={AuthForm}
+                  options={{ headerShown: false }}
+                />
+                {/* Аналог Route */}
+                <MainStack.Screen
+                  name="Login"
+                  component={AuthForm}
+                  options={{ headerShown: false }}
+                />
+              </>
+            )}
+          </MainStack.Navigator>
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }

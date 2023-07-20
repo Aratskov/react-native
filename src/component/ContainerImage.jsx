@@ -8,14 +8,18 @@ export const ContainerImage = ({
   title,
   location,
   geoLocation: { latitude, longitude },
+  id
 }) => {
   const navigate = useNavigation();
   return (
-    <View>
+    <View style={{ marginBottom: 32 }}>
       <Image source={{ uri: photo }} style={styles.image} />
       <Text style={styles.title}>{title}</Text>
       <View style={styles.secondTitle}>
-        <TouchableOpacity style={styles.wrap} onPress={() => navigate.navigate("Comment",{photo})}>
+        <TouchableOpacity
+          style={styles.wrap}
+          onPress={() => navigate.navigate("Comment", { photo,id})}
+        >
           <EvilIcons name="comment" size={24} color="#BDBDBD" />
           <Text>0</Text>
         </TouchableOpacity>
